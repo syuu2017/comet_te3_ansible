@@ -1,0 +1,4 @@
+#MAILTO=root
+MAILTO=""
+
+20 4 * * * /etc/cron.logrotate/logrotate > /dev/null 2>&1 || logger -p cron.info "(cron-ovo) ERROR:/etc/cron.logrotate/logrotate"

@@ -1,0 +1,31 @@
+- hosts: staging
+#  serial: 1
+#  become: yes
+#  become_method: su
+  roles:
+    - disable_selinux
+    - stop_firewalld
+    - chg_nsswitch_conf
+    - add_etc_hosts
+    - put_yum_conf
+    - install_pkgs
+    - uninstall_pkgs
+    - add_users
+    - add_users_set_password
+    - make_dir
+    - set_systemd
+    - add_etc_securetty
+    - put_rhost_conf
+    - chg_chrony_conf
+    - set_crond
+    - set_rsyslog
+    - set_logrotate
+    - set_sysctl
+    - set_sysctl_dracut
+    - chg_etc_sysconfig_network
+    - set_bashrc_profile
+    - set_security
+    - set_security_authorized_keys
+    - set_dump_limit
+    - put_route_team
+

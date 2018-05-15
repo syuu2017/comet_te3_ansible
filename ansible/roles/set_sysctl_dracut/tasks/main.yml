@@ -1,0 +1,4 @@
+---
+- name: Set sysctl.conf for mpn 3 +++run shell dracut+++  
+  shell:  /usr/bin/dracut -v -f
+

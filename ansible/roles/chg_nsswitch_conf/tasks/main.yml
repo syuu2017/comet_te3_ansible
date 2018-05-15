@@ -1,0 +1,6 @@
+---
+- name: edit nsswitch.conf
+  replace:
+    dest: '{{ config_file.nsswitch_conf }}'
+    regexp: '^(hosts:.*\s)dns(.*)'
+    replace: '\1\2'

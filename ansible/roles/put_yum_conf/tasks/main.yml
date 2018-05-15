@@ -1,0 +1,8 @@
+---
+- name: Put yum repository files
+  copy:
+    src: RHEL7_4.repo
+    dest: '{{ config_file.rhel_local_repo }}'
+    mode: 0644
+    owner: root
+    group: root

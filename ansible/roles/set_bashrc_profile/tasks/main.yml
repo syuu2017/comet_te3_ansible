@@ -1,0 +1,10 @@
+---
+- name: set_bashrc_profile_put_bash_profile_and_put_bashrc
+  copy:
+    src: '{{ item.local }}'
+    dest: '{{ item.remote }}'
+    mode: '{{ item.mode }}'
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  with_items:
+    - "{{ set_bash_profile }}"

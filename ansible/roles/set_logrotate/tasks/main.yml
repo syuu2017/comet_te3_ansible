@@ -1,0 +1,34 @@
+---
+- name: set logrotated_syslog - delete the line of var_log_cron
+  replace:
+    dest: '{{ config_file.logrotated_syslog }}'
+    regexp: '/var/log/cron'
+
+- name: set_logrotate format - delete the line of var_log_messages
+  replace:
+    dest: '{{ config_file.logrotated_syslog }}'
+    regexp: '/var/log/messages'
+
+- name: set_crond format - put logrotate_conf
+  copy:
+    src: logrotate.conf
+    dest: '{{ config_file.logrotate_conf }}'
+    mode: 0644
+    owner: root
+    group: root
+
+- name: set_crond format - put logrotated_auth
+  copy:
+    src: auth
+    dest: '{{ config_file.logrotated_auth }}'
+    mode: 0644
+    owner: root
+    group: root
+
+- name: set_crond format - put logrotated_messages
+  copy:
+    src: messages
+    dest: '{{ config_file.logrotated_messages }}'
+    mode: 0644
+    owner: root
+    group: root

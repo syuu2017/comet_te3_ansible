@@ -1,0 +1,13 @@
+---
+- name: Add mappings to /etc/hosts
+  lineinfile:
+    dest: '{{ config_file.hosts }}'
+    line: "{{ item.ip }}    {{ item.name }}"
+  with_items:
+    - "{{ pja_hosts }}"
+
+- name: IPv6 localhost addr comment out
+  replace:
+    dest: '{{ config_file.hosts }}'
+    regexp: '^(::1)'
+    replace: '# \1'

@@ -1,0 +1,161 @@
+##
+# config file paths
+config_file:
+  hosts: /etc/hosts
+  chrony_conf: /etc/chrony.conf
+  nsswitch_conf: /etc/nsswitch.conf
+  set_sysctl: /etc/sysctl.d/99-pja.conf
+  root_rhosts: /root/.rhosts
+  admin_rhosts: /home/admin/.rhosts
+  securetty: /etc/securetty
+  rsyslog: /etc/rsyslog.conf
+  crond_0hourly: /etc/cron.d/0hourly
+  crond_dailyjobs: /etc/cron.d/dailyjobs
+  crontab: /etc/crontab
+  crond_root: /var/spool/cron/root
+  logrotated_syslog: /etc/logrotate.d/syslog
+  logrotate_conf: /etc/logrotate.conf
+  logrotated_auth: /etc/logrotate.d/auth
+  logrotated_messages: /etc/logrotate.d/messages
+  etc_profile: /etc/profile
+  etc_pamd_su: /etc/pam.d/su
+  etc_sudoers: /etc/sudoers
+  etc_ssh_sshd_config: /etc/ssh/sshd_config
+  systemd_system_conf: /etc/systemd/system.conf
+  abrt_xxxx_conf: /etc/abrt/abrt-action-save-package-data.conf
+  limits_conf: /etc/security/limits.conf
+  init_d_function: /etc/init.d/functions
+  etc_sysconfig_network: /etc/sysconfig/network
+  rhel_local_repo: /etc/yum.repos.d/RHEL7_4.repo
+
+# for roles/install_pkgs
+install_pkgs:
+  - rsh
+  - rsh-server
+  - cronie-noanacron
+
+# for roles/uninstall_pkgs
+uninstall_pkgs:
+  - cronie-anacron
+
+# for roles/set_sysctl
+set_sysctl:
+  - { key: kernel.sysrq , value: 1 }
+  - { key: net.ipv4.tcp_syn_retries , value: 1 }
+  - { key: net.ipv4.tcp_synack_retries , value: 1 }
+  - { key: net.ipv4.tcp_retries1 , value: 2 }
+  - { key: net.ipv4.tcp_retries2 , value: 3 }
+  - { key: net.ipv4.tcp_keepalive_intvl , value: 30 }
+  - { key: net.ipv4.tcp_keepalive_probes , value: 3 }
+  - { key: net.ipv4.tcp_keepalive_time , value: 180 }
+  - { key: net.ipv4.tcp_orphan_retries , value: 1 }
+  - { key: net.ipv4.tcp_fin_timeout , value: 10 }
+  - { key: net.ipv4.conf.all.accept_redirects , value: 0 }
+  - { key: net.ipv4.conf.all.secure_redirects , value: 0 }
+  - { key: net.ipv4.conf.all.send_redirects , value: 0 }
+  - { key: net.ipv4.conf.default.accept_redirects , value: 0 }
+  - { key: net.ipv4.conf.default.secure_redirects , value: 0 }
+  - { key: net.ipv4.conf.default.send_redirects , value: 0 }
+  - { key: net.ipv6.conf.all.disable_ipv6 , value: 1 }
+  - { key: net.ipv6.conf.default.disable_ipv6 , value: 1 }
+  - { key: net.core.rmem_max , value: 524288 }
+  - { key: net.core.rmem_default , value: 524288 }
+  - { key: net.core.wmem_max , value: 524288 }
+  - { key: net.core.wmem_default , value: 524288 }
+  - { key: vm.dirty_expire_centisecs , value: 10 }
+  - { key: vm.dirty_writeback_centisecs , value: 5 }
+  - { key: vm.dirty_ratio , value: 5 }
+  - { key: vm.dirty_background_ratio , value: 2 }
+
+# for set_systemd
+enable_service:
+  - chronyd.service
+  - rsh.socket
+
+disable_service:
+  - firewalld.service
+  - mdmonitor.service
+  - postfix.service
+  - rhsmcertd.service
+  - smartd.service
+  - tuned.service
+  - rhnsd.service
+  - kdump.service
+
+# for roles/set_rsyslog
+set_rsyslog:
+  - 'auth.*,authpriv.*                                       /var/log/auth.log'
+  - '# 13A add  Security Log'
+  - '
+'
+
+# for roles/make_dir
+make_dir:
+  - { path: /pja , owner: root , group: root }
+  - { path: /opt/hp/cluster-ctrl-scripts , owner: root , group: root }
+  - { path: /opt/hp/ovo-ctl-mpe , owner: pja_cmd , group: users }
+
+# for roles/add_users
+add_users:
+  - { name: root , uid: 0 , group: root , groups:  }
+  - { name: admin , uid: 2015 , group: users , groups:  }
+  - { name: emergency , uid: 2016 , group: users , groups: 'root,wheel' }
+  - { name: pja_cmd , uid: 2017 , group: users , groups:  }
+
+# for roles/add_users_set_password
+add_users_passwd:
+  - { name: root , password: 'password2' }
+  - { name: admin , password: 'password2' }
+  - { name: emergency , password: 'password2' }
+  - { name: pja_cmd , password: 'password2' }
+
+# for roles/set_bashrc_profile_old
+set_bash_profile_old:
+  - "# 13A root_user_PATH add"
+  - "PATH=$PATH:/usr/lib64/qt-3.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/root/bin"
+  - "export PATH"
+
+# for roles/set_bashrc_profile
+set_bash_profile:
+  - { local: .bash_profile , remote: /home/emergency/.bash_profile , mode: 644 , owner: emergency , group: users }
+  - { local: .bashrc , remote: /home/emergency/.bashrc , mode: 644 , owner: emergency , group: users }
+  - { local: .bash_profile , remote: /home/admin/.bash_profile , mode: 644 , owner: admin , group: users }
+  - { local: .bashrc , remote: /home/admin/.bashrc , mode: 644 , owner: admin , group: users }
+  - { local: .bash_profile , remote: /home/pja_cmd/.bash_profile , mode: 644 , owner: pja_cmd , group: users }
+  - { local: .bashrc , remote: /home/pja_cmd/.bashrc , mode: 644 , owner: pja_cmd , group: users }
+
+# for roles/set_security_authorized_keys
+set_security_authorized_keys:
+  - { local: authorized_keys_pja , remote: /home/pja_cmd/.ssh/authorized_keys }
+
+# for roles/add_etc_hosts
+pja_hosts:
+    - { ip: 192.168.3.21 , name: 'project_a_1' }
+    - { ip: 192.168.3.22 , name: 'project_a_2' }
+    - { ip: 192.168.3.23 , name: 'project_a_3' }
+    - { ip: 192.168.3.24 , name: 'project_a_4' }
+    - { ip: 192.168.3.25 , name: 'project_a_5' }
+    - { ip: 192.168.3.26 , name: 'project_a_6' }
+    - { ip: 192.168.3.27 , name: 'project_a_7' }
+    - { ip: 192.168.3.28 , name: 'project_a_8' }
+    - { ip: 192.168.3.31 , name: 'c0ovz010.pja.local c0ovz010' }
+    - { ip: 192.168.3.32 , name: 'c0ovz011.pja.local c0ovz011' }
+    - { ip: 192.168.3.33 , name: 'c0ovzv02.pja.local c0ovzv02 ovo' }
+    - { ip: 192.168.3.34 , name: 'c0ovz002.pja.local c0ovz002 ovo002' }
+    - { ip: 192.168.3.35 , name: 'c0ovz102.pja.local c0ovz102 ovo102' }
+    - { ip: 192.168.3.41, name: 'defaultgw' }
+
+# for roles/chg_fixed_conf
+ntp_server:
+  - c0ovz010
+  - c0ovz011
+
+# for roles/put_rhost_conf
+rhosts_files:
+  - { local: root/rhosts_pja , remote: /root/.rhosts , owner: root , group: root }
+  - { local: admin/rhosts_pja , remote: /home/admin/.rhosts , owner: admin , group: users }
+
+# for roles/put_route_team
+put_route_for_hosts:
+  - { local: project_a_1/route-enp0s8 , remote: /etc/sysconfig/network-scripts/route-enp0s8 , mode: 644 , owner: root , group: root }
+

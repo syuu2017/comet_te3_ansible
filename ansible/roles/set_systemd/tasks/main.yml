@@ -1,0 +1,12 @@
+---
+- name: set systemctl enable
+  systemd:
+    name: '{{ item }}'
+    enabled: yes
+  with_items: '{{ enable_service }}'
+
+- name: set systemctl disable
+  systemd:
+    name: '{{ item }}'
+    enabled: no
+  with_items: '{{ disable_service }}'

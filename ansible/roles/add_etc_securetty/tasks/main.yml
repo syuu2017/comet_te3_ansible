@@ -1,0 +1,8 @@
+---
+- name: Put etc_securetty files
+  copy:
+    src: securetty
+    dest: '{{ config_file.securetty }}'
+    mode: 0600
+    owner: root
+    group: root

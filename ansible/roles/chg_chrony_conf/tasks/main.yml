@@ -1,0 +1,20 @@
+---
+- name: edit chrony.conf  comment out server
+  replace:
+    dest: '{{ config_file.chrony_conf }}'
+    regexp: '^(server\s.*ntp\.org.*)'
+    replace: '# \1'
+
+- name: edit chrony.conf  comment out ipv6 bindaddr
+  replace:
+    dest: '{{ config_file.chrony_conf }}'
+    regexp: '^(bindcmdaddress\s+::1)'
+    replace: '# \1'
+
+- name: edit chrony.conf  add server
+  lineinfile:
+    dest: '{{ config_file.chrony_conf }}'
+    regexp: '^server\s+{{ item }}'
+    insertafter: '^# server'
+    line: 'server {{ item }} iburst'
+  with_items: '{{ ntp_server }}'

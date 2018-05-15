@@ -1,0 +1,7 @@
+---
+- name: Unstall packages
+  yum:
+    name: "{{ item }}"
+    state: removed
+  with_items:
+    - "{{ uninstall_pkgs }}"

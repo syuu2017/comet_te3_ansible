@@ -1,0 +1,11 @@
+---
+- name: Add Users
+  user:
+    name: "{{ item.name }}"
+    uid: "{{ item.uid }}"
+    group: "{{ item.group }}"
+    groups: "{{ item.groups }}"
+    shell: /bin/bash
+  with_items:
+    - "{{ add_users }}"
+

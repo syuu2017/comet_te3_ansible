@@ -1,0 +1,7 @@
+---
+- name: Set password +++must be change+++
+  user:
+    name: "{{ item.name }}"
+    password: "{{  item.password  | password_hash('sha512') }}"
+  with_items:
+    - "{{ add_users_passwd }}"

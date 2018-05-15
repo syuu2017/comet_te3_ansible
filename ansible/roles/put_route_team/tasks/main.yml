@@ -1,0 +1,10 @@
+---
+- name: put_route
+  copy:
+    src: '{{ item.local }}'
+    dest: '{{ item.remote }}'
+    mode: '{{ item.mode }}'
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  with_items:
+    - "{{ put_route_for_hosts }}"

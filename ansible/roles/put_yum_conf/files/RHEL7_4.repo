@@ -1,0 +1,5 @@
+[RHEL7.4_OS]
+name=redhat 7.4 os
+baseurl=file:///media
+enabled=1
+gpgcheck=0

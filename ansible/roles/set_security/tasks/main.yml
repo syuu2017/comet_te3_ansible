@@ -1,0 +1,64 @@
+---
+- name: set_security  - su
+  lineinfile:
+    dest: '{{ config_file.etc_pamd_su }}'
+    insertafter: 'pam_wheel.so use_uid'
+    line: 'auth           required        pam_wheel.so use_uid'
+    state: present
+
+- name: set_security   - sudoers
+  copy:
+    src: sudoers
+    dest: '{{ config_file.etc_sudoers }}'
+    mode: 0440
+    owner: root
+    group: root
+
+- name: set_security  - sshd -1
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'PermitRootLogin yes'
+    line: 'PermitRootLogin no'
+    state: present
+
+- name: set_security  - sshd -2
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'AllowTcpForwarding yes'
+    line: 'AllowTcpForwarding no'
+    state: present
+
+- name: set_security  - sshd -3
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'UseDNS yes'
+    line: 'UseDNS no'
+    state: present
+
+- name: set_security  - sshd -4
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'EOF'
+    line: 'Match User pja_cmd'
+    state: present
+
+- name: set_security  - sshd -5
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'EOF'
+    line: 'PasswordAuthentication no'
+    state: present
+
+- name: set_security  - sshd -6
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'Ciphers and keying'
+    line: 'MACs hmac-sha1,umac-64@openssh.com,hmac-sha2-256,hmac-sha2-512,hmac-ripemd160,hmac-ripemd160@openssh.com'
+    state: present
+
+- name: set_security  - sshd -7
+  lineinfile:
+    dest: '{{ config_file.etc_ssh_sshd_config }}'
+    insertafter: 'Ciphers and keying'
+    line: 'Ciphers aes128-ctr,aes192-ctr,aes256-ctr'
+    state: present

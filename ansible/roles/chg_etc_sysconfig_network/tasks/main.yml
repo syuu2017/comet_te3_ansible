@@ -1,0 +1,7 @@
+---
+- name: chg_etc_sysconfig_network
+  lineinfile:
+    dest: '{{ config_file.etc_sysconfig_network }}'
+    line: 'NOZEROCONF=yes'
+    state: present
+

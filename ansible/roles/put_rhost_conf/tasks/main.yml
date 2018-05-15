@@ -1,0 +1,10 @@
+---  
+- name: Put rhosts files
+  copy:
+    src: '{{ item.local }}'
+    dest: '{{ item.remote }}'
+    mode: 0600
+    owner: '{{ item.owner }}'
+    group: '{{ item.group }}'
+  with_items:
+    - "{{ rhosts_files }}"

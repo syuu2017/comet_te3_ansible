@@ -1,0 +1,70 @@
+---
+- name: add mailto in crond_0hourly
+  lineinfile:
+    dest: '{{ config_file.crond_0hourly }}'
+    insertafter: 'MAILTO=root'
+    line: 'MAILTO=""'
+    state: present
+
+- name: command out mailto_root in crond_0hourly
+  replace:
+    dest: '{{ config_file.crond_0hourly }}'
+    regexp: '^MAILTO=root'
+    replace: '#MAILTO=root'
+
+- name: add mailto in crond_dailyjobs
+  lineinfile:
+    dest: '{{ config_file.crond_dailyjobs }}'
+    insertafter: 'MAILTO=root'
+    line: 'MAILTO=""'
+    state: present
+
+- name: command out mailto_root in crond_dailyjobs
+  replace:
+    dest: '{{ config_file.crond_dailyjobs }}'
+    regexp: '^MAILTO=root'
+    replace: '#MAILTO=root'
+
+
+- name: add mailto in crontab
+  lineinfile:
+    dest: '{{ config_file.crontab }}'
+    insertafter: 'MAILTO=root'
+    line: 'MAILTO=""'
+    state: present
+
+- name: command out mailto_root in crontab
+  replace:
+    dest: '{{ config_file.crontab }}'
+    regexp: '^MAILTO=root'
+    replace: '#MAILTO=root'
+
+- name: Put var_spool_cron_root
+  copy:
+    src: root
+    dest: '{{ config_file.crond_root }}'
+    mode: 0600
+    owner: root
+    group: root
+
+- name: mkdir etc_cron_logrotate
+  file:
+    path: /etc/cron.logrotate/
+    state: directory
+    mode: 0755
+
+- name: copy etc_cron_daily_logrotate to etc_cron_logrotate +++ when it has been set + i will run error + and ignoring the error + please check it manually+++
+  copy:
+    src: /etc/cron.daily/logrotate
+    dest: /etc/cron.logrotate/logrotate
+    remote_src: True
+    mode: 0700
+    owner: root
+    group: root
+  ignore_errors: True
+
+- name: remove etc_cron_daily_logrotate
+  file:
+    path: /etc/cron.daily/logrotate
+    state: absent
+  ignore_errors: True

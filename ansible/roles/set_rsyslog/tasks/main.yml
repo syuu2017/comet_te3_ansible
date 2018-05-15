@@ -1,0 +1,38 @@
+---
+- name: set_rsyslog.conf format-1
+  lineinfile:
+    dest: '{{ config_file.rsyslog }}'
+    insertafter: 'ActionFileDefaultTemplate'
+    line: '$ActionFileDefaultTemplate RSYSLOG_FileFormat'
+    state: present
+
+
+- name: set_rsyslog.conf format-2
+  replace:
+    dest: '{{ config_file.rsyslog }}'
+    regexp: '^\$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat'
+    replace: '#$ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat'
+
+
+- name: set_rsyslog.conf format-3
+  lineinfile:
+    dest: '{{ config_file.rsyslog }}'
+    insertafter: '/var/log/messages'
+    line: '*.info;mail.none;authpriv.none;cron.none;auth.none                 /var/log/messages'
+    state: present
+
+
+- name: set_rsyslog.conf format-4
+  replace:
+    dest: '{{ config_file.rsyslog }}'
+    regexp: '^\*.info;mail.none;authpriv.none;cron.none                /var/log/messages'
+    replace: '#*.info;mail.none;authpriv.none;cron.none                /var/log/messages'
+
+- name: set_rsyslog.conf format-6 +++run skipping when the file already be set+++
+  lineinfile:
+   dest: '{{ config_file.rsyslog }}'
+   insertafter: '/var/log/boot.log'
+   line: '{{ item }}'
+  with_items:
+    - "{{ set_rsyslog }}"
+#  when: rsyslog_result|failed

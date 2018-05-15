@@ -1,0 +1,18 @@
+---
+- name: mkdir home_pja_cmd_.ssh
+  file:
+    path: /home/pja_cmd/.ssh
+    state: directory
+    mode: 0700
+    owner: pja_cmd
+    group: users
+
+- name: Put security_authorized_keys
+  copy:
+    src: '{{ item.local }}'
+    dest: '{{ item.remote }}'
+    mode: 0600
+    owner: pja_cmd
+    group: users
+  with_items:
+    - "{{ set_security_authorized_keys }}"

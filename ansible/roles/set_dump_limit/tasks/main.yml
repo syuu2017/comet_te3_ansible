@@ -1,0 +1,41 @@
+---
+- name: set dump limit - system_conf
+  lineinfile:
+    dest: '{{ config_file.systemd_system_conf }}'
+    insertafter: '^#DefaultLimitCORE='
+    line: 'DefaultLimitCORE=infinity'
+    state: present
+
+- name: set dump limit - abrt_xxxx_conf -1 
+  replace:
+    dest: '{{ config_file.abrt_xxxx_conf }}'
+    regexp: 'OpenGPGCheck = yes'
+    replace: 'OpenGPGCheck = no'
+
+- name: set dump limit - abrt_xxxx_conf -2
+  replace:
+    dest: '{{ config_file.abrt_xxxx_conf }}'
+    regexp: 'ProcessUnpackaged = no'
+    replace: 'ProcessUnpackaged = yes'
+
+- name: set dump limit - limits_conf -1
+  lineinfile:
+    dest: '{{ config_file.limits_conf }}'
+    insertafter: 'soft    core            0'
+    line: '*               hard    core            unlimited'
+    state: present
+
+- name: set dump limit - limits_conf -2
+  lineinfile:
+    dest: '{{ config_file.limits_conf }}'
+    insertafter: 'soft    core            0'
+    line: '*               soft    core            unlimited'
+    state: present
+
+- name: set dump limit - init_d_function
+  lineinfile:
+    dest: '{{ config_file.init_d_function }}'
+    insertbefore: 'DAEMON_COREFILE_LIMIT:-0'
+    line: '        DAEMON_COREFILE_LIMIT=unlimited'
+    state: present
+
